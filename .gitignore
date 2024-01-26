@@ -42,3 +42,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/.env
+/lib/ui/screens/q_and_a/q_and_a_state.freezed.dart
+/lib/ui/screens/q_and_a/q_and_a_view_model.g.dart
+/lib/app_container.g.dart
