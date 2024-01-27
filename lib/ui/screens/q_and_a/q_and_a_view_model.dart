@@ -4,11 +4,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'q_and_a_view_model.g.dart';
 
+enum Authors {
+  ai,
+  user;
+}
+
 @riverpod
 class QAndAViewModel extends _$QAndAViewModel {
   @override
   FutureOr<QAndAState> build() async {
-    return const QAndAState();
+    const message = 'こんにちは＾＾\n'
+      + 'ご用件はなんでしょうか？';
+    final chat = Chat(author: Authors.ai.name, message: message);
+
+    return QAndAState(
+      chatList: [chat],
+    );
   }
 
   void setChat(String author, String message) {
@@ -34,13 +45,20 @@ class QAndAViewModel extends _$QAndAViewModel {
   }
 
   Future<void> callAiChat(String sendMessage) async {
-    setChat('user', sendMessage);
+    setChat(Authors.user.name, sendMessage);
     setLoading(true);
 
     final repository = ref.read(aiChatRepositoryProvider);
-    final recvMessage = await repository.callAiChat(sendMessage);
-
-    setChat('ai', recvMessage);
-    setLoading(false);
+    final stream = repository.callAiChat2(sendMessage);
+    stream.listen((response) {
+      setChat(Authors.ai.name, response);
+    })
+    ..onError((handleError) {
+      setLoading(false);
+      state = AsyncError(handleError, StackTrace.current);
+    })
+    ..onDone(() {
+      setLoading(false);
+    });
   }
 }

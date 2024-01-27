@@ -46,3 +46,5 @@ app.*.map.json
 /lib/ui/screens/q_and_a/q_and_a_state.freezed.dart
 /lib/ui/screens/q_and_a/q_and_a_view_model.g.dart
 /lib/app_container.g.dart
+/.env.dart
+/lib/common/env.g.dart

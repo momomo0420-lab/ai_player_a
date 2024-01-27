@@ -45,7 +45,7 @@ class QAndABody extends HookWidget {
 
         Widget container;
 
-        if(chat.author == 'ai') {
+        if(chat.author == Authors.ai.name) {
           container = recvMessageContainer(context, chat.message);
         } else {
           container = sendMessageContainer(context, chat.message);
