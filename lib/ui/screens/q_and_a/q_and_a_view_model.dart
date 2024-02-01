@@ -24,24 +24,34 @@ class QAndAViewModel extends _$QAndAViewModel {
 
   void setChat(String author, String message) {
     if(state.value == null) return;
-    QAndAState stateValue = state.value!;
 
+    final stateValue = state.value!;
     final chat = Chat(author: author, message: message);
     final newChatList = [...stateValue.chatList, chat];
 
-    stateValue = stateValue.copyWith(
+    final newStateValue = stateValue.copyWith(
       chatList: newChatList,
     );
 
-    state = AsyncData(stateValue);
+    state = AsyncData(newStateValue);
   }
 
   void setLoading(bool isLoading) {
     if(state.value == null) return;
-    QAndAState stateValue = state.value!;
 
-    stateValue = stateValue.copyWith(isLoading: isLoading);
-    state = AsyncData(stateValue);
+    final stateValue = state.value!;
+    final newStateValue = stateValue.copyWith(isLoading: isLoading);
+    state = AsyncData(newStateValue);
+  }
+
+  void setSendable(bool isSendable) {
+    if(state.value == null) return;
+
+    final stateValue = state.value!;
+    if(isSendable == stateValue.isSendable) return;
+
+    final newStateValue = stateValue.copyWith(isSendable: isSendable);
+    state = AsyncData(newStateValue);
   }
 
   Future<void> callAiChat(String sendMessage) async {

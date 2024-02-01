@@ -19,26 +19,28 @@ class QAndABody extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ScrollController();
+
     return Column(
       children: [
         Expanded(
-          child: _buildChatListView(_state.chatList),
+          child: _buildChatListView(
+            _state.chatList,
+            controller: controller,
+          ),
         ),
 
-        oneLineTextField(
-          controller: useTextEditingController(),
-          isLoading: _state.isLoading,
-          onSend: (message) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            _viewModel.callAiChat(message);
-          },
-        ),
+        _buildOneListTextField(),
       ],
     );
   }
 
-  Widget _buildChatListView(List<Chat> chatList) {
+  Widget _buildChatListView(
+    List<Chat> chatList, {
+    ScrollController? controller,
+  }) {
     return ListView.builder(
+      controller: controller,
       itemCount: chatList.length,
       itemBuilder: (context, index) {
         final chat = chatList[index];
@@ -52,6 +54,31 @@ class QAndABody extends HookWidget {
         }
 
         return container;
+      },
+    );
+  }
+
+  Widget _buildOneListTextField() {
+    return oneLineTextField(
+      controller: useTextEditingController(),
+      hint: 'メッセージを入力してください',
+      isLoading: _state.isLoading,
+      isSendable: _state.isSendable,
+      onChanged: (text) {
+        bool isSendable = true;
+        if(text == '') isSendable = false;
+
+        _viewModel.setSendable(isSendable);
+      },
+      onSend: (message) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        _viewModel.callAiChat(message);
+        _viewModel.setSendable(false);
+        // controller.animateTo(
+        //   controller.position.maxScrollExtent,
+        //   duration: const Duration(seconds: 1),
+        //   curve: Curves.linear,
+        // );
       },
     );
   }

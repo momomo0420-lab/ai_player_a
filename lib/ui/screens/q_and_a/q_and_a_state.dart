@@ -9,6 +9,8 @@ class QAndAState with _$QAndAState{
     List<Chat> chatList,
     @Default(false)
     bool isLoading,
+    @Default(false)
+    bool isSendable,
   }) = _QAndAState;
 }
 
