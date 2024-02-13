@@ -63,21 +63,13 @@ class QAndABody extends HookWidget {
       controller: useTextEditingController(),
       hint: 'メッセージを入力してください',
       sendButtonState: _viewModel.isSendButtonState(),
-      onChanged: (text) {
-        final isEmpty = (text == '');
-        _viewModel.setEmptyWithTextField(isEmpty);
-      },
+      onChanged: _viewModel.changeTextField,
       onSend: (message) {
         FocusManager.instance.primaryFocus?.unfocus();
         _viewModel.callAiChat(message);
-        _viewModel.setEmptyWithTextField(true);
       },
-      onRec: () {
-        _viewModel.setRecording(true);
-      },
-      onStop: () {
-        _viewModel.setRecording(false);
-      },
+      onRec: _viewModel.startListening,
+      onStop: _viewModel.stopListening,
     );
   }
 }

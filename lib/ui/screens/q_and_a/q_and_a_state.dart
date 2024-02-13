@@ -14,6 +14,8 @@ class QAndAState with _$QAndAState{
     bool isRecording,
     @Default(true)
     bool isEmptyWithTextField,
+    @Default('')
+    String speechToText,
   }) = _QAndAState;
 }
 

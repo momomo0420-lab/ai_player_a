@@ -1,6 +1,7 @@
 import 'package:ai_player_a/app_container.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'q_and_a_view_model.g.dart';
@@ -9,8 +10,8 @@ part 'q_and_a_view_model.g.dart';
 class QAndAViewModel extends _$QAndAViewModel {
   @override
   FutureOr<QAndAState> build() async {
-    const message = 'こんにちは\n'
-      + 'ご用件はなんでしょうか？';
+    const message = 'こんにちは\nご用件はなんでしょうか？';
+
     final tts = ref.read(textToSpeechUseCaseProvider);
     tts.speak(message);
 
@@ -96,7 +97,13 @@ class QAndAViewModel extends _$QAndAViewModel {
     return SendButtonState.isWaitingText;
   }
 
+  void changeTextField(String message) {
+    final isEmpty = (message == '');
+    setEmptyWithTextField(isEmpty);
+  }
+
   Future<void> callAiChat(String sendMessage) async {
+    setEmptyWithTextField(true);
     setUserChat(sendMessage);
     setLoading(true);
 
@@ -127,5 +134,24 @@ class QAndAViewModel extends _$QAndAViewModel {
 
     setAiChat(response);
     setLoading(false);
+  }
+
+  Future<void> startListening() async {
+    debugPrint('startListening: start');
+    setRecording(true);
+
+    final stt = ref.read(speechToTextUseCaseProvider);
+    await stt.listen((message) {
+      if(message == '') return;
+      callAiChat(message);
+      setRecording(false);
+    });
+    debugPrint('startListening: end');
+  }
+
+  Future<void> stopListening() async {
+    final stt = ref.read(speechToTextUseCaseProvider);
+    stt.stop();
+    setRecording(false);
   }
 }
