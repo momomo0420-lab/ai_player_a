@@ -1,3 +1,4 @@
+import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_view_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'q_and_a_state.freezed.dart';
@@ -10,7 +11,9 @@ class QAndAState with _$QAndAState{
     @Default(false)
     bool isLoading,
     @Default(false)
-    bool isSendable,
+    bool isRecording,
+    @Default(true)
+    bool isEmptyWithTextField,
   }) = _QAndAState;
 }
 

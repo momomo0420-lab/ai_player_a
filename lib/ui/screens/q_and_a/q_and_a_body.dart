@@ -59,26 +59,24 @@ class QAndABody extends HookWidget {
   }
 
   Widget _buildOneListTextField() {
-    return oneLineTextField(
+    return OneLineTextField(
       controller: useTextEditingController(),
       hint: 'メッセージを入力してください',
-      isLoading: _state.isLoading,
-      isSendable: _state.isSendable,
+      sendButtonState: _viewModel.isSendButtonState(),
       onChanged: (text) {
-        bool isSendable = true;
-        if(text == '') isSendable = false;
-
-        _viewModel.setSendable(isSendable);
+        final isEmpty = (text == '');
+        _viewModel.setEmptyWithTextField(isEmpty);
       },
       onSend: (message) {
         FocusManager.instance.primaryFocus?.unfocus();
         _viewModel.callAiChat(message);
-        _viewModel.setSendable(false);
-        // controller.animateTo(
-        //   controller.position.maxScrollExtent,
-        //   duration: const Duration(seconds: 1),
-        //   curve: Curves.linear,
-        // );
+        _viewModel.setEmptyWithTextField(true);
+      },
+      onRec: () {
+        _viewModel.setRecording(true);
+      },
+      onStop: () {
+        _viewModel.setRecording(false);
       },
     );
   }

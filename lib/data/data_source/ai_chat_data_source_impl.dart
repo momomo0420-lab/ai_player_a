@@ -18,4 +18,11 @@ class AiChatDataSourceImpl implements AiChatDataSource {
        if(response != null) yield response;
      }
   }
+
+  @override
+  Future<String> callAiChat2(String message) async {
+    final response = await _gemini.text(message);
+
+    return response?.output ?? '';
+  }
 }
