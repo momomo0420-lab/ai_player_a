@@ -17,11 +17,15 @@ class QAndAState with _$QAndAState{
   }) = _QAndAState;
 }
 
+enum Authors {
+  ai,
+  user;
+}
+
 @freezed
 class Chat with _$Chat {
   const factory Chat ({
-    @Default('')
-    String author,
+    required Authors author,
     @Default('')
     String message,
   }) = _Chat;

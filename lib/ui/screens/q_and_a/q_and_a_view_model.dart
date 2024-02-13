@@ -5,11 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'q_and_a_view_model.g.dart';
 
-enum Authors {
-  ai,
-  user;
-}
-
 @riverpod
 class QAndAViewModel extends _$QAndAViewModel {
   @override
@@ -19,8 +14,8 @@ class QAndAViewModel extends _$QAndAViewModel {
     final tts = ref.read(textToSpeechUseCaseProvider);
     tts.speak(message);
 
-    final chat = Chat(author: Authors.ai.name, message: message);
-    return QAndAState(
+    const chat = Chat(author: Authors.ai, message: message);
+    return const QAndAState(
       chatList: [chat],
     );
   }
@@ -29,7 +24,7 @@ class QAndAViewModel extends _$QAndAViewModel {
     if(state.value == null) return;
     final stateValue = state.value!;
 
-    final chat = Chat(author: Authors.user.name, message: message);
+    final chat = Chat(author: Authors.user, message: message);
     final newChatList = [...stateValue.chatList, chat];
 
     final newStateValue = stateValue.copyWith(
@@ -46,13 +41,13 @@ class QAndAViewModel extends _$QAndAViewModel {
     final chatList = [...stateValue.chatList];
     final lastChat = chatList.last;
 
-    if(lastChat.author == Authors.user.name) {
+    if(lastChat.author == Authors.user) {
       chatList.add(
-        Chat(author: Authors.ai.name, message: message),
+        Chat(author: Authors.ai, message: message),
       );
     } else {
       final newChat = Chat(
-        author: Authors.ai.name,
+        author: Authors.ai,
         message: lastChat.message + message
       );
       chatList[chatList.length - 1] = newChat;
@@ -108,8 +103,8 @@ class QAndAViewModel extends _$QAndAViewModel {
     final repository = ref.read(aiChatRepositoryProvider);
     final stream = repository.callAiChat(sendMessage);
     stream.listen((response) {
-      final tts = ref.read(textToSpeechUseCaseProvider);
-      tts.speak(response);
+      // final tts = ref.read(textToSpeechUseCaseProvider);
+      // tts.speak(response);
       setAiChat(response);
     })
     ..onError((handleError) {
