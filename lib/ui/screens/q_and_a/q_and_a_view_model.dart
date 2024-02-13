@@ -103,6 +103,11 @@ class QAndAViewModel extends _$QAndAViewModel {
   }
 
   Future<void> callAiChat(String sendMessage) async {
+    if(state.value == null) return;
+    final stateValue = state.value!;
+
+    if(stateValue.isLoading) return;
+
     setEmptyWithTextField(true);
     setUserChat(sendMessage);
     setLoading(true);
@@ -110,8 +115,6 @@ class QAndAViewModel extends _$QAndAViewModel {
     final repository = ref.read(aiChatRepositoryProvider);
     final stream = repository.callAiChat(sendMessage);
     stream.listen((response) {
-      // final tts = ref.read(textToSpeechUseCaseProvider);
-      // tts.speak(response);
       setAiChat(response);
     })
     ..onError((handleError) {
@@ -119,6 +122,11 @@ class QAndAViewModel extends _$QAndAViewModel {
       state = AsyncError(handleError, StackTrace.current);
     })
     ..onDone(() {
+      final tts = ref.read(textToSpeechUseCaseProvider);
+
+      if(state.value == null) return;
+      final newStateValue = state.value!;
+      tts.speak(newStateValue.chatList.last.message);
       setLoading(false);
     });
   }
@@ -143,6 +151,7 @@ class QAndAViewModel extends _$QAndAViewModel {
     final stt = ref.read(speechToTextUseCaseProvider);
     await stt.listen((message) {
       if(message == '') return;
+
       callAiChat(message);
       setRecording(false);
     });
@@ -151,7 +160,7 @@ class QAndAViewModel extends _$QAndAViewModel {
 
   Future<void> stopListening() async {
     final stt = ref.read(speechToTextUseCaseProvider);
-    stt.stop();
+    await stt.stop();
     setRecording(false);
   }
 }
