@@ -128,6 +128,7 @@ class OneLineTextField extends StatelessWidget {
     return IconButton(
       onPressed: () {
         if(_onSend != null) _onSend!(_controller.text);
+        FocusManager.instance.primaryFocus?.unfocus();
         _controller.clear();
       },
       color: Colors.blue,

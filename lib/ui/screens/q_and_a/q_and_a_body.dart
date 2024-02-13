@@ -64,10 +64,7 @@ class QAndABody extends HookWidget {
       hint: 'メッセージを入力してください',
       sendButtonState: _viewModel.isSendButtonState(),
       onChanged: _viewModel.changeTextField,
-      onSend: (message) {
-        FocusManager.instance.primaryFocus?.unfocus();
-        _viewModel.callAiChat(message);
-      },
+      onSend: _viewModel.callAiChat,
       onRec: _viewModel.startListening,
       onStop: _viewModel.stopListening,
     );
