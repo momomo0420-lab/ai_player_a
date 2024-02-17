@@ -122,11 +122,11 @@ class QAndAViewModel extends _$QAndAViewModel {
       state = AsyncError(handleError, StackTrace.current);
     })
     ..onDone(() {
-      final tts = ref.read(textToSpeechUseCaseProvider);
-
-      if(state.value == null) return;
-      final newStateValue = state.value!;
-      tts.speak(newStateValue.chatList.last.message);
+      // final tts = ref.read(textToSpeechUseCaseProvider);
+      //
+      // if(state.value == null) return;
+      // final newStateValue = state.value!;
+      // tts.speak(newStateValue.chatList.last.message);
       setLoading(false);
     });
   }

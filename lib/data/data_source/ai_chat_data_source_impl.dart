@@ -1,28 +1,36 @@
 import 'package:ai_player_a/data/data_source/ai_chat_data_source.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class AiChatDataSourceImpl implements AiChatDataSource {
-  final Gemini _gemini;
+  final GenerativeModel _model;
 
   const AiChatDataSourceImpl(
-    Gemini gemini,
-  ): _gemini = gemini;
+      GenerativeModel model,
+  ): _model = model;
 
   @override
   Stream<String> callAiChat(String message) async* {
-     final stream = _gemini.streamGenerateContent(message);
+    final response = _model.generateContentStream(
+      createPrompt(message),
+    );
 
-     await for(var value in stream) {
-       final response = value.output;
+     await for(var chunk in response) {
+       final text = chunk.text;
 
-       if(response != null) yield response;
+       if(text != null) yield text;
      }
   }
 
   @override
   Future<String> callAiChat2(String message) async {
-    final response = await _gemini.text(message);
+    final response = await _model.generateContent(
+      createPrompt(message),
+    );
 
-    return response?.output ?? '';
+    return response.text ?? '応答がありません。';
+  }
+
+  Iterable<Content> createPrompt(String message) {
+    return [Content.text(message)];
   }
 }

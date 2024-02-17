@@ -1,4 +1,3 @@
-import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_view_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'q_and_a_state.freezed.dart';
@@ -14,8 +13,6 @@ class QAndAState with _$QAndAState{
     bool isRecording,
     @Default(true)
     bool isEmptyWithTextField,
-    @Default('')
-    String speechToText,
   }) = _QAndAState;
 }
 

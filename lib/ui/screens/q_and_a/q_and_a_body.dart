@@ -19,14 +19,12 @@ class QAndABody extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ScrollController();
-
     return Column(
       children: [
         Expanded(
           child: _buildChatListView(
             _state.chatList,
-            controller: controller,
+            ScrollController(),
           ),
         ),
 
@@ -36,9 +34,9 @@ class QAndABody extends HookWidget {
   }
 
   Widget _buildChatListView(
-    List<Chat> chatList, {
-    ScrollController? controller,
-  }) {
+    List<Chat> chatList,
+    ScrollController controller,
+  ) {
     return ListView.builder(
       controller: controller,
       itemCount: chatList.length,
@@ -51,6 +49,9 @@ class QAndABody extends HookWidget {
           container = recvMessageContainer(context, chat.message);
         } else {
           container = sendMessageContainer(context, chat.message);
+          if(_state.isLoading) {
+            controller.jumpTo(controller.position.maxScrollExtent);
+          }
         }
 
         return container;
