@@ -1,23 +1,23 @@
 import 'package:ai_player_a/app_container.dart';
 import 'package:ai_player_a/data/model/chat.dart';
-import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
+import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_state.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'q_and_a_view_model.g.dart';
+part 'ai_chat_view_model.g.dart';
 
 @riverpod
-class QAndAViewModel extends _$QAndAViewModel {
+class AiChatViewModel extends _$AiChatViewModel {
   @override
-  FutureOr<QAndAState> build() async {
+  FutureOr<AiChatState> build() async {
     const message = 'こんにちは\nご用件はなんでしょうか？';
 
     final tts = ref.read(textToSpeechUseCaseProvider);
     tts.speak(message);
 
     const chat = Chat(author: Authors.ai, message: message);
-    return const QAndAState(
+    return const AiChatState(
       chatList: [chat],
     );
   }
@@ -49,8 +49,8 @@ class QAndAViewModel extends _$QAndAViewModel {
       );
     } else {
       final newChat = Chat(
-        author: Authors.ai,
-        message: lastChat.message + message
+          author: Authors.ai,
+          message: lastChat.message + message
       );
       chatList[chatList.length - 1] = newChat;
     }
@@ -118,18 +118,18 @@ class QAndAViewModel extends _$QAndAViewModel {
     stream.listen((response) {
       setAiChat(response);
     })
-    ..onError((handleError) {
-      setLoading(false);
-      state = AsyncError(handleError, StackTrace.current);
-    })
-    ..onDone(() {
-      // final tts = ref.read(textToSpeechUseCaseProvider);
-      //
-      // if(state.value == null) return;
-      // final newStateValue = state.value!;
-      // tts.speak(newStateValue.chatList.last.message);
-      setLoading(false);
-    });
+      ..onError((handleError) {
+        setLoading(false);
+        state = AsyncError(handleError, StackTrace.current);
+      })
+      ..onDone(() {
+        // final tts = ref.read(textToSpeechUseCaseProvider);
+        //
+        // if(state.value == null) return;
+        // final newStateValue = state.value!;
+        // tts.speak(newStateValue.chatList.last.message);
+        setLoading(false);
+      });
   }
 
   Future<void> callAiChat2(String sendMessage) async {

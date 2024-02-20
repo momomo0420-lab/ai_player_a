@@ -1,11 +1,14 @@
+import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_screen.dart';
 import 'package:ai_player_a/ui/screens/home/home_screen.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 enum AppScreens {
   home('/'),
-  q_and_a('/q_and_a'),
+  qAndA('/q_and_a'),
+  aiChat('/ai_chat'),
   ;
 
   final String path;
@@ -38,9 +41,14 @@ class AppNavigator extends StatelessWidget {
         ),
 
         GoRoute(
-          path: AppScreens.q_and_a.path,
+          path: AppScreens.qAndA.path,
           builder: _buildQAndAScreen,
         ),
+
+        GoRoute(
+          path: AppScreens.aiChat.path,
+          builder: _buildAiChatScreen,
+        )
       ],
     );
   }
@@ -50,8 +58,16 @@ class AppNavigator extends StatelessWidget {
     GoRouterState state,
   ) {
     return HomeScreen(
-      navigateNextScreen: () => context.push(AppScreens.q_and_a.path),
+      navigateQAndAScreen: () => context.push(AppScreens.qAndA.path),
+      navigateAiChatScree: () => context.push(AppScreens.aiChat.path),
     );
+  }
+
+  Widget _buildAiChatScreen(
+    BuildContext context,
+    GoRouterState state,
+  ) {
+    return const AiChatScreen();
   }
 
   Widget _buildQAndAScreen(

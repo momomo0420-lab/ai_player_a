@@ -48,3 +48,6 @@ app.*.map.json
 /lib/app_container.g.dart
 /.env.dart
 /lib/common/env.g.dart
+/lib/data/model/chat.freezed.dart
+/lib/ui/screens/ai_chat/ai_chat_state.freezed.dart
+/lib/ui/screens/ai_chat/ai_chat_view_model.g.dart

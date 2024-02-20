@@ -1,11 +1,11 @@
 import 'package:ai_player_a/data/model/chat.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'q_and_a_state.freezed.dart';
+part 'ai_chat_state.freezed.dart';
 
 @freezed
-class QAndAState with _$QAndAState{
-  const factory QAndAState({
+class AiChatState with _$AiChatState {
+  const factory AiChatState({
     @Default([])
     List<Chat> chatList,
     @Default(false)
@@ -14,5 +14,5 @@ class QAndAState with _$QAndAState{
     bool isRecording,
     @Default(true)
     bool isEmptyWithTextField,
-  }) = _QAndAState;
+  }) = _AiChatState;
 }

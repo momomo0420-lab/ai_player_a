@@ -1,20 +1,20 @@
 import 'package:ai_player_a/data/model/chat.dart';
-import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
-import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_view_model.dart';
+import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_state.dart';
+import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_view_model.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
 import 'package:ai_player_a/ui/widget/recv_message_container.dart';
 import 'package:ai_player_a/ui/widget/send_message_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class QAndABody extends HookWidget {
-  final QAndAState _state;
-  final QAndAViewModel _viewModel;
+class AiChatBody extends HookWidget {
+  final AiChatState _state;
+  final AiChatViewModel _viewModel;
 
-  const QAndABody({
+  const AiChatBody({
     super.key,
-    required QAndAState state,
-    required QAndAViewModel viewModel,
+    required AiChatState state,
+    required AiChatViewModel viewModel,
   }): _state = state,
         _viewModel = viewModel;
 
@@ -35,9 +35,9 @@ class QAndABody extends HookWidget {
   }
 
   Widget _buildChatListView(
-    List<Chat> chatList,
-    ScrollController controller,
-  ) {
+      List<Chat> chatList,
+      ScrollController controller,
+      ) {
     return ListView.builder(
       controller: controller,
       itemCount: chatList.length,
