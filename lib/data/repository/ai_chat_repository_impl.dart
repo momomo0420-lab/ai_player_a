@@ -9,6 +9,11 @@ class AiChatRepositoryImpl implements AiChatRepository {
   ): _dataSource = dataSource;
 
   @override
+  Future<String> initChat() async {
+    return _dataSource.initChat();
+  }
+
+  @override
   Stream<String> callAiChat(String message) {
     return _dataSource.callAiChat(message);
   }

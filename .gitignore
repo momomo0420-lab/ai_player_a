@@ -51,3 +51,5 @@ app.*.map.json
 /lib/data/model/chat.freezed.dart
 /lib/ui/screens/ai_chat/ai_chat_state.freezed.dart
 /lib/ui/screens/ai_chat/ai_chat_view_model.g.dart
+/lib/ui/screens/ai_consultant/ai_consultant_state.freezed.dart
+/lib/ui/screens/ai_consultant/ai_consultant_view_model.g.dart
