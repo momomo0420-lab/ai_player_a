@@ -2,7 +2,6 @@ import 'package:ai_player_a/app_container.dart';
 import 'package:ai_player_a/data/model/chat.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'q_and_a_view_model.g.dart';
@@ -22,69 +21,33 @@ class QAndAViewModel extends _$QAndAViewModel {
     );
   }
 
-  void setUserChat(String message) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
+  void _updateState({
+    Authors? authors,
+    String? message,
+    bool? isLoading,
+    bool? isRecording,
+    bool? isEmptyWithTextField,
+  }) {
+    if(state.value == null) {
+      state = AsyncError('予期せぬエラーが発生しました。', StackTrace.current);
+      return;
+    }
+    QAndAState stateValue = state.value!;
 
-    final chat = Chat(author: Authors.user, message: message);
-    final newChatList = [...stateValue.chatList, chat];
-
-    final newStateValue = stateValue.copyWith(
-      chatList: newChatList,
-    );
-
-    state = AsyncData(newStateValue);
-  }
-
-  void setAiChat(String message) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
-
-    final chatList = [...stateValue.chatList];
-    final lastChat = chatList.last;
-
-    if(lastChat.author == Authors.user) {
-      chatList.add(
-        Chat(author: Authors.ai, message: message),
-      );
-    } else {
-      final newChat = Chat(
-        author: Authors.ai,
-        message: lastChat.message + message
-      );
-      chatList[chatList.length - 1] = newChat;
+    if((authors != null) && (message != null)) {
+      stateValue = stateValue.addChat(authors, message);
+    }
+    if(isLoading != null) {
+      stateValue = stateValue.copyWith(isLoading: isLoading);
+    }
+    if(isRecording != null) {
+      stateValue = stateValue.copyWith(isRecording: isRecording);
+    }
+    if(isEmptyWithTextField != null) {
+      stateValue = stateValue.copyWith(isEmptyWithTextField: isEmptyWithTextField);
     }
 
-    final newStateValue = stateValue.copyWith(
-      chatList: chatList,
-    );
-    state = AsyncData(newStateValue);
-  }
-
-  void setLoading(bool isLoading) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
-
-    final newStateValue = stateValue.copyWith(isLoading: isLoading);
-    state = AsyncData(newStateValue);
-  }
-
-  void setEmptyWithTextField(bool isEmpty) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
-
-    if(isEmpty == stateValue.isEmptyWithTextField) return;
-
-    final newStateValue = stateValue.copyWith(isEmptyWithTextField: isEmpty);
-    state = AsyncData(newStateValue);
-  }
-
-  void setRecording(bool isRecording) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
-
-    final newStateValue = stateValue.copyWith(isRecording: isRecording);
-    state = AsyncData(newStateValue);
+    state = AsyncData(stateValue);
   }
 
   SendButtonState isSendButtonState() {
@@ -98,28 +61,25 @@ class QAndAViewModel extends _$QAndAViewModel {
     return SendButtonState.isWaitingText;
   }
 
-  void changeTextField(String message) {
+  Future<void> changeTextField(String message) async {
     final isEmpty = (message == '');
-    setEmptyWithTextField(isEmpty);
+    _updateState(isEmptyWithTextField: isEmpty);
   }
 
-  Future<void> callAiChat(String sendMessage) async {
-    if(state.value == null) return;
-    final stateValue = state.value!;
-
-    if(stateValue.isLoading) return;
-
-    setEmptyWithTextField(true);
-    setUserChat(sendMessage);
-    setLoading(true);
+  Future<void> callAiChat(String message) async {
+    _updateState(
+      authors: Authors.user,
+      message: message,
+      isLoading: true,
+      isEmptyWithTextField: true,
+    );
 
     final repository = ref.read(aiChatRepositoryProvider);
-    final stream = repository.callAiChat(sendMessage);
-    stream.listen((response) {
-      setAiChat(response);
+    final response = repository.callAiChat(message);
+    response.listen((chunk) {
+      _updateState(authors: Authors.ai, message: chunk);
     })
     ..onError((handleError) {
-      setLoading(false);
       state = AsyncError(handleError, StackTrace.current);
     })
     ..onDone(() {
@@ -128,40 +88,29 @@ class QAndAViewModel extends _$QAndAViewModel {
       // if(state.value == null) return;
       // final newStateValue = state.value!;
       // tts.speak(newStateValue.chatList.last.message);
-      setLoading(false);
+      _updateState(isLoading: false);
     });
-  }
-
-  Future<void> callAiChat2(String sendMessage) async {
-    setUserChat(sendMessage);
-    setLoading(true);
-
-    final repository = ref.read(aiChatRepositoryProvider);
-    final response = await repository.callAiChat2(sendMessage);
-    final tts = ref.read(textToSpeechUseCaseProvider);
-    tts.speak(response);
-
-    setAiChat(response);
-    setLoading(false);
   }
 
   Future<void> startListening() async {
-    debugPrint('startListening: start');
-    setRecording(true);
+    _updateState(isRecording: true);
 
     final stt = ref.read(speechToTextUseCaseProvider);
     await stt.listen((message) {
-      if(message == '') return;
+      if(state.value == null) return;
+      final stateValue = state.value!;
+
+      if(message == '' || (stateValue.isLoading == true)) return;
 
       callAiChat(message);
-      setRecording(false);
+      state = AsyncData(stateValue.copyWith(isRecording: false));
     });
-    debugPrint('startListening: end');
   }
 
   Future<void> stopListening() async {
     final stt = ref.read(speechToTextUseCaseProvider);
     await stt.stop();
-    setRecording(false);
+
+    _updateState(isRecording: false);
   }
 }

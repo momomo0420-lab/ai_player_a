@@ -18,7 +18,7 @@ part 'app_container.g.dart';
 @riverpod
 AiChatDataSource aiChatDataSource(AiChatDataSourceRef ref) {
   final model = GenerativeModel(model: 'gemini-pro', apiKey: Env.geminiApiKey);
-  return AiChatDataSourceImpl(model);
+  return AiChatDataSourceImpl(model.startChat());
 }
 
 @riverpod

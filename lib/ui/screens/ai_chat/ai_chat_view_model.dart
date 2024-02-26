@@ -132,19 +132,6 @@ class AiChatViewModel extends _$AiChatViewModel {
       });
   }
 
-  Future<void> callAiChat2(String sendMessage) async {
-    setUserChat(sendMessage);
-    setLoading(true);
-
-    final repository = ref.read(aiChatRepositoryProvider);
-    final response = await repository.callAiChat2(sendMessage);
-    final tts = ref.read(textToSpeechUseCaseProvider);
-    tts.speak(response);
-
-    setAiChat(response);
-    setLoading(false);
-  }
-
   Future<void> startListening() async {
     debugPrint('startListening: start');
     setRecording(true);
