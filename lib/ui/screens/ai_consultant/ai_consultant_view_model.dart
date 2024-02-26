@@ -76,12 +76,27 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
     if(state.value == null) return;
     AiConsultantState stateValue = state.value!;
 
+    String messageText = "";
+    final latestMessage = stateValue.messages.first as TextMessage;
+    if(latestMessage.author == getAiUser()) {
+      messageText = latestMessage.text;
+    }
+    messageText += message;
+
     final textMessage = TextMessage(
       author: getAiUser(),
       id: const Uuid().v4(),
-      text: message,
+      text: messageText,
     );
-    _updateState(messages: [textMessage, ...stateValue.messages]);
+    
+    var messages = [...stateValue.messages];
+
+    if(latestMessage.author == getAiUser()) {
+      messages.removeAt(0);
+    }
+    messages.insert(0, textMessage);
+
+    _updateState(messages: messages);
   }
 
   void _onDone() {
