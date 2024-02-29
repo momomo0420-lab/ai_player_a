@@ -5,15 +5,18 @@ class HomeBody extends StatelessWidget {
   final Function()? _navigateQAndA;
   final Function()? _navigateAiChat;
   final Function()? _navigateAiConsultant;
+  final Function()? _navigateWaitingTileChecker;
 
   const HomeBody({
     super.key,
     Function()? navigateQAndA,
     Function()? navigateAiChat,
     Function()? navigateAiConsultant,
+    Function()? navigateWaitingTileChecker,
   }): _navigateQAndA = navigateQAndA,
         _navigateAiChat = navigateAiChat,
-        _navigateAiConsultant = navigateAiConsultant;
+        _navigateAiConsultant = navigateAiConsultant,
+        _navigateWaitingTileChecker = navigateWaitingTileChecker;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +33,11 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 20,),
 
           menuCard(
-            Image.asset('images/ai_chat.png'),
-            'AIチャット',
-            'AIとのチャットを開始します。',
+            Image.asset('images/ma-jan_pai.png'),
+            '待ち牌チェッカー',
+            '手牌の画像から待ち牌を回答します。',
             'START',
-            _navigateAiChat,
+            _navigateWaitingTileChecker,
           ),
         ],
       ),

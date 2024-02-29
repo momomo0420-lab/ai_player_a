@@ -53,3 +53,5 @@ app.*.map.json
 /lib/ui/screens/ai_chat/ai_chat_view_model.g.dart
 /lib/ui/screens/ai_consultant/ai_consultant_state.freezed.dart
 /lib/ui/screens/ai_consultant/ai_consultant_view_model.g.dart
+/lib/ui/screens/waiting_tile_checker/waiting_tile_checker_view_model.g.dart
+/lib/ui/screens/waiting_tile_checker/waiting_tile_checker_state.freezed.dart
