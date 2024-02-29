@@ -17,6 +17,31 @@ class WaitingTileCheckerBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.file(File(_state.path));
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Image.file(File(_state.path)),
+            Text(_state.response),
+          ],
+        ),
+
+        Center(
+          child: _buildIndicator(),
+        )
+      ],
+    );
+  }
+
+  Widget _buildIndicator() {
+    Widget widget;
+
+    if(_state.isConnecting) {
+      widget = const CircularProgressIndicator();
+    } else {
+      widget = Container();
+    }
+
+    return widget;
   }
 }

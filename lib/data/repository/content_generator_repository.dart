@@ -1,5 +1,5 @@
 import 'dart:typed_data';
 
 abstract class ContentGeneratorRepository {
-  Stream<String> listenWaitingTile(Uint8List byteData);
+  Stream<String> checkWaitingTile(Uint8List byteData);
 }

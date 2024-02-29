@@ -11,11 +11,12 @@ class ContentGeneratorDataSourceImpl implements ContentGeneratorDataSource {
   }): _model = model;
 
   @override
-  Stream<String> listenWaitingTile(Uint8List image) async* {
+  Stream<String> checkWaitingTile(Uint8List image) async* {
     const prompt = '''
       あなたはプロの雀士です。
       次の画像を確認し、待ち牌を回答してください。
       またテンパイしていない場合は「まだテンパイしていません。」と回答してください。
+      また画像から判断できない場合は「判断できない画像です。」と回答してください。
     ''';
 
     final promptPart = TextPart(prompt);

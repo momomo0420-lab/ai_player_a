@@ -11,7 +11,7 @@ class ContentGeneratorRepositoryImpl implements ContentGeneratorRepository {
   }): _dataSource = dataSource;
 
   @override
-  Stream<String> listenWaitingTile(Uint8List byteData) {
-    return _dataSource.listenWaitingTile(byteData);
+  Stream<String> checkWaitingTile(Uint8List byteData) {
+    return _dataSource.checkWaitingTile(byteData);
   }
 }
