@@ -24,29 +24,19 @@ class WaitingTileCheckerViewModel extends _$WaitingTileCheckerViewModel {
     return WaitingTileCheckerState(path: xFile.path, isConnecting: true);
   }
 
-  void _updateState({
-    String? path,
-    String? response,
-    bool? isConnecting,
-  }) {
-    if(state.value == null) return;
-    var stateValue = state.value!;
+  Future<void> _onData(String chunk) async {
+    state = await AsyncValue.guard(() async {
+      final currentState = await future;
 
-    if(path != null) stateValue = stateValue.copyWith(path: path);
-    if(response != null) stateValue = stateValue.copyWith(response: response);
-    if(isConnecting != null) stateValue = stateValue.copyWith(isConnecting: isConnecting);
-
-    state = AsyncData(stateValue);
+      return currentState.copyWith(response: currentState.response + chunk);
+    });
   }
 
-  void _onData(String chunk) {
-    if(state.value == null) return;
-    final stateValue = state.value!;
+  Future<void> _onDone() async {
+    state = await AsyncValue.guard(() async {
+      final currentState = await future;
 
-    _updateState(response: stateValue.response + chunk);
-  }
-
-  void _onDone() {
-    _updateState(isConnecting: false);
+      return currentState.copyWith(isConnecting: false);
+    });
   }
 }

@@ -35,71 +35,75 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
     return const User(id: 'ai');
   }
 
-  void _updateState({
-    List<Message>? messages,
-    bool? isConnecting,
-  }) {
-    if(state.value == null) return;
-    AiConsultantState stateValue = state.value!;
-
-    if(messages != null) stateValue = stateValue.copyWith(messages: messages);
-    if(isConnecting != null) stateValue = stateValue.copyWith(isConnecting: isConnecting);
-
-    state = AsyncData(stateValue);
-  }
-
-  Future<void> sendMessage(PartialText message) async {
-    if(state.value == null) return;
-    AiConsultantState stateValue = state.value!;
-
-    final textMessage = TextMessage(
+  Future<TextMessage> _buildUserTextMessage(String text) async {
+    return TextMessage(
       author: getUser(),
       id: const Uuid().v4(),
-      text: message.text,
+      text: text,
     );
-    _updateState(
-      messages: [textMessage, ...stateValue.messages],
-      isConnecting: true,
-    );
-
-    final repository = ref.read(aiChatRepositoryProvider);
-    repository.callAiChat(message.text)
-      .listen(_onData)
-      ..onError((handleError){
-        _updateState(isConnecting: false);
-        state = AsyncError(handleError, StackTrace.current);
-      })
-      ..onDone(_onDone);
   }
 
-  void _onData(String message) {
-    if(state.value == null) return;
-    AiConsultantState stateValue = state.value!;
+  Future<TextMessage> _buildAiTextMessage(String text) async {
+    final currentState = await future;
 
     String messageText = "";
-    final latestMessage = stateValue.messages.first as TextMessage;
+    final latestMessage = currentState.messages.first as TextMessage;
     if(latestMessage.author == getAiUser()) {
       messageText = latestMessage.text;
     }
-    messageText += message;
+    messageText += text;
 
-    final textMessage = TextMessage(
+    return TextMessage(
       author: getAiUser(),
       id: const Uuid().v4(),
       text: messageText,
     );
-    
-    var messages = [...stateValue.messages];
+  }
 
+  Future<void> sendMessage(PartialText message) async {
+    state = await AsyncValue.guard(() async {
+      final textMessage = await _buildUserTextMessage(message.text);
+
+      final currentState = await future;
+      return currentState.copyWith(
+        messages: [textMessage, ...currentState.messages],
+        isConnecting: true,
+      );
+    });
+
+    final repository = ref.read(aiChatRepositoryProvider);
+    repository.callAiChat(message.text)
+      .listen(_onData)
+      ..onError(_onError)
+      ..onDone(_onDone);
+  }
+
+  Future<void> _onData(String message) async {
+    final currentState = await future;
+
+    // Stream型の為、前回がAIから取得したメッセージの場合は前回のデータを削除し、
+    // 新しいメッセージで更新する。
+    var messages = [...currentState.messages];
+    final latestMessage = currentState.messages.first;
     if(latestMessage.author == getAiUser()) {
       messages.removeAt(0);
     }
+    final textMessage = await _buildAiTextMessage(message);
     messages.insert(0, textMessage);
 
-    _updateState(messages: messages);
+    state = await AsyncValue.guard(() async {
+      return currentState.copyWith(messages: messages);
+    });
   }
 
-  void _onDone() {
-    _updateState(isConnecting: false);
+  Future<void> _onError(Object handleError) async {
+    state = AsyncError(handleError, StackTrace.current);
+  }
+
+  Future<void> _onDone() async {
+    state = await AsyncValue.guard(() async {
+      final currentState = await future;
+      return currentState.copyWith(isConnecting: false);
+    });
   }
 }
