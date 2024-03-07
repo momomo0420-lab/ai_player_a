@@ -30,7 +30,7 @@ class AiChatViewModel extends _$AiChatViewModel {
 
   Future<void> sendMessage(String message) async {
     final currentState = await _updateState(isConnecting: true);
-    final repository = ref.read(aiChatRepository2Provider);
+    final repository = ref.read(aiChatRepositoryProvider);
     final response = repository.callAiChat(
       history: currentState.history,
       message: message,

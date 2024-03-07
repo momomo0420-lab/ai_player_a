@@ -1,14 +1,6 @@
 import 'package:ai_player_a/common/env.dart';
-import 'package:ai_player_a/data/data_source/ai_chat_data_source.dart';
-import 'package:ai_player_a/data/data_source/ai_chat_data_source_impl.dart';
-import 'package:ai_player_a/data/data_source/content_generator_data_source.dart';
-import 'package:ai_player_a/data/data_source/content_generator_data_source_impl.dart';
 import 'package:ai_player_a/data/repository/ai_chat_repository.dart';
-import 'package:ai_player_a/data/repository/ai_chat_repository_2.dart';
-import 'package:ai_player_a/data/repository/ai_chat_repository_2_impl.dart';
 import 'package:ai_player_a/data/repository/ai_chat_repository_impl.dart';
-import 'package:ai_player_a/data/repository/content_generator_repository.dart';
-import 'package:ai_player_a/data/repository/content_generator_repository_impl.dart';
 import 'package:ai_player_a/domain/speech_to_text_use_case_impl.dart';
 import 'package:ai_player_a/domain/text_to_speech_use_case_impl.dart';
 import 'package:ai_player_a/domain/text_to_speech_use_case.dart';
@@ -22,43 +14,12 @@ import 'domain/speech_to_text_use_case.dart';
 part 'app_container.g.dart';
 
 @riverpod
-AiChatDataSource aiChatDataSource(AiChatDataSourceRef ref) {
-  final model = GenerativeModel(model: 'gemini-pro', apiKey: Env.geminiApiKey);
-  return AiChatDataSourceImpl(chat: model.startChat());
-}
-
-@riverpod
 AiChatRepository aiChatRepository(AiChatRepositoryRef ref) {
-  final dataSource = ref.watch(aiChatDataSourceProvider);
-  return AiChatRepositoryImpl(dataSource);
-}
-
-@riverpod
-ContentGeneratorDataSource contentGeneratorDataSource(
-  ContentGeneratorDataSourceRef ref
-) {
-  final model = GenerativeModel(
-    model: 'gemini-pro-vision',
-    apiKey: Env.geminiApiKey,
-  );
-  return ContentGeneratorDataSourceImpl(model: model);
-}
-
-@riverpod
-ContentGeneratorRepository contentGeneratorRepository(
-  ContentGeneratorRepositoryRef ref
-) {
-  final dataSource = ref.watch(contentGeneratorDataSourceProvider);
-  return ContentGeneratorRepositoryImpl(dataSource: dataSource);
-}
-
-@riverpod
-AiChatRepository2 aiChatRepository2(AiChatRepository2Ref ref) {
   final model = GenerativeModel(
     model: 'gemini-pro',
     apiKey: Env.geminiApiKey,
   );
-  return AiChatRepository2Impl(model: model);
+  return AiChatRepositoryImpl(model: model);
 }
 
 @riverpod

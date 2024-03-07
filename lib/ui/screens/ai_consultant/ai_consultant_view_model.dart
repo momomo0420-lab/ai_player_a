@@ -9,7 +9,7 @@ part 'ai_consultant_view_model.g.dart';
 class AiConsultantViewModel extends _$AiConsultantViewModel {
   @override
   FutureOr<AiConsultantState> build() async {
-    final repository = ref.read(aiChatRepository2Provider);
+    final repository = ref.read(aiChatRepositoryProvider);
     final message = await repository.initConsultation();
 
     return AiConsultantState(
@@ -35,7 +35,7 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
 
   Future<void> sendMessage(String message) async {
     final currentState = await _updateState(isConnecting: true);
-    final repository = ref.read(aiChatRepository2Provider);
+    final repository = ref.read(aiChatRepositoryProvider);
     final response = repository.consultSymptom(
       history: currentState.history,
       message: message,
