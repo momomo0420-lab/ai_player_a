@@ -2,19 +2,16 @@ import 'package:ai_player_a/ui/widget/menu_card.dart';
 import 'package:flutter/material.dart';
 
 class HomeBody extends StatelessWidget {
-  final Function()? _navigateQAndA;
   final Function()? _navigateAiChat;
   final Function()? _navigateAiConsultant;
   final Function()? _navigateWaitingTileChecker;
 
   const HomeBody({
     super.key,
-    Function()? navigateQAndA,
     Function()? navigateAiChat,
     Function()? navigateAiConsultant,
     Function()? navigateWaitingTileChecker,
-  }): _navigateQAndA = navigateQAndA,
-        _navigateAiChat = navigateAiChat,
+  }): _navigateAiChat = navigateAiChat,
         _navigateAiConsultant = navigateAiConsultant,
         _navigateWaitingTileChecker = navigateWaitingTileChecker;
 

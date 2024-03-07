@@ -1,15 +1,12 @@
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_screen.dart';
 import 'package:ai_player_a/ui/screens/ai_consultant/ai_consultant_screen.dart';
 import 'package:ai_player_a/ui/screens/home/home_screen.dart';
-import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_screen.dart';
 import 'package:ai_player_a/ui/screens/waiting_tile_checker/waiting_tile_checker_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 enum AppScreens {
   home('/'),
-  qAndA('/q_and_a'),
   aiChat('/ai_chat'),
   aiConsultant('/ai_consultant'),
   waitingTileChecker('/waiting_tile_checker'),
@@ -45,11 +42,6 @@ class AppNavigator extends StatelessWidget {
         ),
 
         GoRoute(
-          path: AppScreens.qAndA.path,
-          builder: _buildQAndAScreen,
-        ),
-
-        GoRoute(
           path: AppScreens.aiChat.path,
           builder: _buildAiChatScreen,
         ),
@@ -72,7 +64,6 @@ class AppNavigator extends StatelessWidget {
     GoRouterState state,
   ) {
     return HomeScreen(
-      navigateQAndA: () => context.push(AppScreens.qAndA.path),
       navigateAiChat: () => context.push(AppScreens.aiChat.path),
       navigateAiConsultant: () => context.push(AppScreens.aiConsultant.path),
       navigateWaitingTileChecker: () => context.push(AppScreens.waitingTileChecker.path),
@@ -84,13 +75,6 @@ class AppNavigator extends StatelessWidget {
     GoRouterState state,
   ) {
     return const AiChatScreen();
-  }
-
-  Widget _buildQAndAScreen(
-    BuildContext context,
-    GoRouterState state,
-  ) {
-    return const QAndAScreen();
   }
 
   Widget _buildAiConsultant(

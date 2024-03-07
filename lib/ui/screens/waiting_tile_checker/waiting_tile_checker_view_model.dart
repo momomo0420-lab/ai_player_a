@@ -13,7 +13,7 @@ class WaitingTileCheckerViewModel extends _$WaitingTileCheckerViewModel {
     final xFile = await imagePicker.pickImage(source: ImageSource.camera);
     if(xFile == null) throw Exception('Error: 画像が取得できませんでした。');
 
-    final repository = ref.read(contentGeneratorRepositoryProvider);
+    final repository = ref.read(aiChatRepository2Provider);
     final byteData = await xFile.readAsBytes();
     final response = repository.checkWaitingTile(byteData);
 
