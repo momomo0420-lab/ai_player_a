@@ -21,7 +21,7 @@ class AiChatViewModel extends _$AiChatViewModel {
 
       return currentState.copyWith(
         isConnecting: isConnecting ?? currentState.isConnecting,
-        history: history ?? currentState.history
+        history: history ?? currentState.history,
       );
     });
 
@@ -44,7 +44,7 @@ class AiChatViewModel extends _$AiChatViewModel {
     response.listen(
       _onData,
       onError: _onError,
-      onDone: _onDone
+      onDone: _onDone,
     );
   }
 

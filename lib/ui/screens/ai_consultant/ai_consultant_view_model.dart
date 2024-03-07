@@ -25,8 +25,8 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
       final currentState = await future;
 
       return currentState.copyWith(
-          isConnecting: isConnecting ?? currentState.isConnecting,
-          history: history ?? currentState.history
+        isConnecting: isConnecting ?? currentState.isConnecting,
+        history: history ?? currentState.history,
       );
     });
 
@@ -47,9 +47,9 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
     _updateState(history: history);
 
     response.listen(
-        _onData,
-        onError: _onError,
-        onDone: _onDone
+      _onData,
+      onError: _onError,
+      onDone: _onDone,
     );
   }
 
