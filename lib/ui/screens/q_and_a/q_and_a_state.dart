@@ -1,4 +1,4 @@
-import 'package:ai_player_a/data/model/chat.dart';
+import 'package:ai_player_a/data/model/chat_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'q_and_a_state.freezed.dart';
@@ -8,7 +8,7 @@ class QAndAState with _$QAndAState{
   const QAndAState._();
   const factory QAndAState({
     @Default([])
-    List<Chat> chatList,
+    List<ChatModel> chatList,
     @Default(false)
     bool isLoading,
     @Default(false)
@@ -21,8 +21,8 @@ class QAndAState with _$QAndAState{
     Authors authors,
     String message,
   ) {
-    Chat chat;
-    List<Chat> newChatList;
+    ChatModel chat;
+    List<ChatModel> newChatList;
 
     if(authors == Authors.user) {
       chat = _createUserChat(message);
@@ -35,22 +35,22 @@ class QAndAState with _$QAndAState{
     return copyWith(chatList: newChatList);
   }
 
-  Chat _createUserChat(String message) {
-    return Chat(
+  ChatModel _createUserChat(String message) {
+    return ChatModel(
       author: Authors.user,
       message: message,
     );
   }
 
-  Chat _createAiChat(String message) {
+  ChatModel _createAiChat(String message) {
     final lastChat = chatList.last;
 
     return (lastChat.author == Authors.user) ?
-      Chat(author: Authors.ai, message: message) :
-      Chat(author: Authors.ai, message: lastChat.message + message);
+    ChatModel(author: Authors.ai, message: message) :
+    ChatModel(author: Authors.ai, message: lastChat.message + message);
   }
 
-  List<Chat> _createAiChatList(Chat chat) {
+  List<ChatModel> _createAiChatList(ChatModel chat) {
     final oldChatList = [...chatList];
     final lastChat = oldChatList.last;
 

@@ -1,4 +1,4 @@
-import 'package:ai_player_a/data/model/chat.dart';
+import 'package:ai_player_a/data/model/chat_model.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_view_model.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
@@ -35,7 +35,7 @@ class QAndABody extends HookWidget {
   }
 
   Widget _buildChatListView(
-    List<Chat> chatList,
+    List<ChatModel> chatList,
     ScrollController controller,
   ) {
     return ListView.builder(

@@ -1,4 +1,4 @@
-import 'package:ai_player_a/data/model/chat.dart';
+import 'package:ai_player_a/data/model/chat_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ai_chat_state.freezed.dart';
@@ -6,13 +6,9 @@ part 'ai_chat_state.freezed.dart';
 @freezed
 class AiChatState with _$AiChatState {
   const factory AiChatState({
+    @Default(false)
+    bool isConnecting,
     @Default([])
-    List<Chat> chatList,
-    @Default(false)
-    bool isLoading,
-    @Default(false)
-    bool isRecording,
-    @Default(true)
-    bool isEmptyWithTextField,
+    List<ChatModel> history,
   }) = _AiChatState;
 }

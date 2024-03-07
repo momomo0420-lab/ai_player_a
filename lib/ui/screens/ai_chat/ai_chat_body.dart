@@ -1,13 +1,12 @@
-import 'package:ai_player_a/data/model/chat.dart';
+import 'package:ai_player_a/data/model/chat_model.dart';
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_state.dart';
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_view_model.dart';
-import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
-import 'package:ai_player_a/ui/widget/recv_message_container.dart';
-import 'package:ai_player_a/ui/widget/send_message_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:uuid/uuid.dart';
 
-class AiChatBody extends HookWidget {
+class AiChatBody extends StatelessWidget {
   final AiChatState _state;
   final AiChatViewModel _viewModel;
 
@@ -20,55 +19,63 @@ class AiChatBody extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Expanded(
-          child: _buildChatListView(
-            _state.chatList,
-            ScrollController(),
-          ),
+        Chat(
+          messages: _buildMessages(_state.history),
+          onSendPressed: (message) => _onSendPressed(context, message),
+          user: types.User(id: Authors.user.name),
         ),
 
-        _buildOneListTextField(),
+        Center(
+          child: _buildIndicator(),
+        ),
       ],
     );
   }
 
-  Widget _buildChatListView(
-      List<Chat> chatList,
-      ScrollController controller,
-      ) {
-    return ListView.builder(
-      controller: controller,
-      itemCount: chatList.length,
-      itemBuilder: (context, index) {
-        final chat = chatList[index];
+  List<types.Message> _buildMessages(List<ChatModel> history) {
+    List<types.Message> messages = [];
 
-        Widget container;
+    for(var chat in history) {
+      late final types.User author;
 
-        if(chat.author == Authors.ai) {
-          container = recvMessageContainer(context, chat.message);
-        } else {
-          container = sendMessageContainer(context, chat.message);
-          // if(_state.isLoading) {
-          //   controller.jumpTo(controller.position.maxScrollExtent);
-          // }
-        }
+      if(chat.author == Authors.ai) {
+        author = types.User(id: Authors.ai.name);
+      } else {
+        author = types.User(id: Authors.user.name);
+      }
 
-        return container;
-      },
-    );
+      final message = types.TextMessage(
+        author: author,
+        id: const Uuid().v4(),
+        text: chat.message,
+      );
+
+      messages.insert(0, message);
+    }
+
+    return messages;
   }
 
-  Widget _buildOneListTextField() {
-    return OneLineTextField(
-      controller: useTextEditingController(),
-      hint: 'メッセージを入力してください',
-      sendButtonState: _viewModel.isSendButtonState(),
-      onChanged: _viewModel.changeTextField,
-      onSend: _viewModel.callAiChat,
-      onRec: _viewModel.startListening,
-      onStop: _viewModel.stopListening,
-    );
+  Widget _buildIndicator() {
+    Widget widget = Container();
+
+    if(_state.isConnecting) {
+      widget = const CircularProgressIndicator();
+    }
+
+    return widget;
+  }
+
+  void _onSendPressed(BuildContext context, types.PartialText message) {
+    if(_state.isConnecting) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('通信中のため入力できません。')),
+      );
+      return;
+    }
+
+    _viewModel.sendMessage(message.text);
   }
 }

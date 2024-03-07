@@ -1,5 +1,5 @@
 import 'package:ai_player_a/app_container.dart';
-import 'package:ai_player_a/data/model/chat.dart';
+import 'package:ai_player_a/data/model/chat_model.dart';
 import 'package:ai_player_a/ui/screens/q_and_a/q_and_a_state.dart';
 import 'package:ai_player_a/ui/widget/one_line_text_field.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,7 +15,7 @@ class QAndAViewModel extends _$QAndAViewModel {
     final tts = ref.read(textToSpeechUseCaseProvider);
     tts.speak(message);
 
-    const chat = Chat(author: Authors.ai, message: message);
+    const chat = ChatModel(author: Authors.ai, message: message);
     return const QAndAState(
       chatList: [chat],
     );

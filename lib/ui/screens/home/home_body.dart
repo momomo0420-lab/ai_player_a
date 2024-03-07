@@ -24,6 +24,15 @@ class HomeBody extends StatelessWidget {
       child: Column(
         children: [
           menuCard(
+            Image.asset('images/ai_chat.png'),
+            'AIチャット',
+            'AIとの対話を行います。',
+            'START',
+            _navigateAiChat,
+          ),
+          const SizedBox(height: 20,),
+
+          menuCard(
             Image.asset('images/kusuribako.png'),
             '症状診断',
             '対話形式で症状の診断を行います。',

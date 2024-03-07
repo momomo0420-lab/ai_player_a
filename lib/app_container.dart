@@ -4,6 +4,8 @@ import 'package:ai_player_a/data/data_source/ai_chat_data_source_impl.dart';
 import 'package:ai_player_a/data/data_source/content_generator_data_source.dart';
 import 'package:ai_player_a/data/data_source/content_generator_data_source_impl.dart';
 import 'package:ai_player_a/data/repository/ai_chat_repository.dart';
+import 'package:ai_player_a/data/repository/ai_chat_repository_2.dart';
+import 'package:ai_player_a/data/repository/ai_chat_repository_2_impl.dart';
 import 'package:ai_player_a/data/repository/ai_chat_repository_impl.dart';
 import 'package:ai_player_a/data/repository/content_generator_repository.dart';
 import 'package:ai_player_a/data/repository/content_generator_repository_impl.dart';
@@ -48,6 +50,15 @@ ContentGeneratorRepository contentGeneratorRepository(
 ) {
   final dataSource = ref.watch(contentGeneratorDataSourceProvider);
   return ContentGeneratorRepositoryImpl(dataSource: dataSource);
+}
+
+@riverpod
+AiChatRepository2 aiChatRepository2(AiChatRepository2Ref ref) {
+  final model = GenerativeModel(
+    model: 'gemini-pro',
+    apiKey: Env.geminiApiKey,
+  );
+  return AiChatRepository2Impl(model: model);
 }
 
 @riverpod
