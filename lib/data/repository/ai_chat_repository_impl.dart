@@ -57,8 +57,22 @@ class AiChatRepositoryImpl implements AiChatRepository {
     required List<ChatModel> history,
     required String message,
   }) async* {
+    const prompt = '''
+      あなたは老人保険施設の看護師です。
+      施設の利用者様に問題が発生しているため、私とのチャットを行い原因の特定をして下さい。
+      また、以下のルールに従い、行動して下さい。
+    
+      [ルール]
+      　１．はじめは必ず「こんにちは。本日はどのような症状でお困りですか？」から質問を始めてください。
+      　２．その後、上記１．の症状の原因を特定するための質問をしてください。
+      質問は簡単なものにしてください。また1回のやり取りでの質問は１つとしてください。
+      　３．上記２．を繰り返し症状の原因と考えられる候補を特定してください。
+      　４．症状の原因と考えられる候補を特定出来た時点で、それの病名および対策を提示してください。
+      対策は詳細に記述してください。また候補は3個以上あげてください。
+    ''';
+
     List<Content> historyContents = [
-      Content.text(_initialUserPrompt),
+      Content.text(prompt),
     ];
     historyContents += _buildHistoryContents(history);
     final chat = _model.startChat(
@@ -72,20 +86,6 @@ class AiChatRepositoryImpl implements AiChatRepository {
       if(text != null) yield text;
     }
   }
-
-  String get _initialUserPrompt => '''
-    あなたは老人保険施設の看護師です。
-    施設の利用者様に問題が発生しているため、私とのチャットを行い原因の特定をして下さい。
-    また、以下のルールに従い、行動して下さい。
-  
-    [ルール]
-    　１．はじめは必ず「こんにちは。本日はどのような症状でお困りですか？」から質問を始めてください。
-    　２．その後、上記１．の症状の原因を特定するための質問をしてください。
-    質問は簡単なものにしてください。また1回のやり取りでの質問は１つとしてください。
-    　３．上記２．を繰り返し症状の原因と考えられる候補を特定してください。
-    　４．症状の原因と考えられる候補を特定出来た時点で、それの病名および対策を提示してください。
-    対策は詳細に記述してください。また候補は3個以上あげてください。
-  ''';
 
   @override
   Stream<String> checkWaitingTile(Uint8List image) async* {
