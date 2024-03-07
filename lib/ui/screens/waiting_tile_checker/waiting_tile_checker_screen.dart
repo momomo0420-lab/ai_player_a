@@ -22,7 +22,7 @@ class WaitingTileCheckerScreen extends ConsumerWidget {
 
       body: state.when(
         data: (stateValue) => _onSuccess(stateValue, viewModel),
-        error: _onError,
+        error: (error, stackTrace) => _onError(viewModel, error, stackTrace),
         loading: _onLoad,
       ),
     );
@@ -35,8 +35,17 @@ class WaitingTileCheckerScreen extends ConsumerWidget {
     return WaitingTileCheckerBody(state: state, viewModel: viewModel);
   }
 
-  Widget _onError(Object error, StackTrace stackTrace) {
-    return const Center(child: Text('原因不明のエラーが発生しました。'));
+  Widget _onError(
+    WaitingTileCheckerViewModel viewModel,
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: viewModel.retry,
+        child: const Text('再試行'),
+      ),
+    );
   }
 
   Widget _onLoad() => const Center(child: CircularProgressIndicator());

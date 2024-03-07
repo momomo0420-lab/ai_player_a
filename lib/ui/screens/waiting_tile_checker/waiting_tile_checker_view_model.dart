@@ -25,6 +25,10 @@ class WaitingTileCheckerViewModel extends _$WaitingTileCheckerViewModel {
     return WaitingTileCheckerState(path: xFile.path, isConnecting: true);
   }
 
+  Future<void> retry() async {
+    ref.invalidateSelf();
+  }
+
   Future<void> _onData(String chunk) async {
     state = await AsyncValue.guard(() async {
       final currentState = await future;
