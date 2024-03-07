@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ai_player_a/data/model/chat_model.dart';
 
-abstract class AiChatRepository {
+abstract class AiModelRepository {
   Stream<String> callAiChat({
     required List<ChatModel> history,
     required String message,

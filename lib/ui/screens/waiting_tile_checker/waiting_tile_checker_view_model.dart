@@ -13,13 +13,14 @@ class WaitingTileCheckerViewModel extends _$WaitingTileCheckerViewModel {
     final xFile = await imagePicker.pickImage(source: ImageSource.camera);
     if(xFile == null) throw Exception('Error: 画像が取得できませんでした。');
 
-    final repository = ref.read(aiChatRepositoryProvider);
+    final repository = ref.read(aiModelRepositoryProvider);
     final byteData = await xFile.readAsBytes();
     final response = repository.checkWaitingTile(byteData);
 
-    response
-      .listen(_onData)
-      .onDone(_onDone);
+    response.listen(_onData,
+      onDone: _onDone,
+      onError: _onError,
+    );
 
     return WaitingTileCheckerState(path: xFile.path, isConnecting: true);
   }
@@ -38,5 +39,9 @@ class WaitingTileCheckerViewModel extends _$WaitingTileCheckerViewModel {
 
       return currentState.copyWith(isConnecting: false);
     });
+  }
+
+  Future<void> _onError(Object error) async {
+    state = AsyncError(error, StackTrace.current);
   }
 }

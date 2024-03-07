@@ -1,6 +1,6 @@
 import 'package:ai_player_a/common/env.dart';
-import 'package:ai_player_a/data/repository/ai_chat_repository.dart';
-import 'package:ai_player_a/data/repository/ai_chat_repository_impl.dart';
+import 'package:ai_player_a/data/repository/ai_model_repository.dart';
+import 'package:ai_player_a/data/repository/ai_model_repository_impl.dart';
 import 'package:ai_player_a/domain/speech_to_text_use_case_impl.dart';
 import 'package:ai_player_a/domain/text_to_speech_use_case_impl.dart';
 import 'package:ai_player_a/domain/text_to_speech_use_case.dart';
@@ -14,12 +14,21 @@ import 'domain/speech_to_text_use_case.dart';
 part 'app_container.g.dart';
 
 @riverpod
-AiChatRepository aiChatRepository(AiChatRepositoryRef ref) {
+AiModelRepository aiModelRepository(AiModelRepositoryRef ref) {
   final model = GenerativeModel(
     model: 'gemini-pro',
     apiKey: Env.geminiApiKey,
   );
-  return AiChatRepositoryImpl(model: model);
+
+  final visionModel = GenerativeModel(
+    model: 'gemini-pro-vision',
+    apiKey: Env.geminiApiKey,
+  );
+
+  return AiModelRepositoryImpl(
+    model: model,
+    visionModel: visionModel,
+  );
 }
 
 @riverpod

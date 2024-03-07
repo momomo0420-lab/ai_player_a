@@ -1,15 +1,18 @@
 import 'dart:typed_data';
 
 import 'package:ai_player_a/data/model/chat_model.dart';
-import 'package:ai_player_a/data/repository/ai_chat_repository.dart';
+import 'package:ai_player_a/data/repository/ai_model_repository.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
-class AiChatRepositoryImpl implements AiChatRepository {
+class AiModelRepositoryImpl implements AiModelRepository {
   final GenerativeModel _model;
+  final GenerativeModel _visionModel;
 
-  const AiChatRepositoryImpl({
+  const AiModelRepositoryImpl({
     required GenerativeModel model,
-  }): _model = model;
+    required GenerativeModel visionModel,
+  }): _model = model,
+        _visionModel = visionModel;
 
   @override
   Stream<String> callAiChat({
@@ -101,7 +104,7 @@ class AiChatRepositoryImpl implements AiChatRepository {
     final parts = [promptPart, imagePart];
 
     final contents = [Content.multi(parts)];
-    final response = _model.generateContentStream(contents);
+    final response = _visionModel.generateContentStream(contents);
 
     await for(var chunk in response) {
       final text = chunk.text;
