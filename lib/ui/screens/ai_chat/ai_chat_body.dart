@@ -1,4 +1,4 @@
-import 'package:ai_player_a/data/model/chat_model.dart';
+import 'package:ai_player_a/data/model/message_model.dart';
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_state.dart';
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_view_model.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class AiChatBody extends StatelessWidget {
     );
   }
 
-  List<types.Message> _buildMessages(List<ChatModel> history) {
+  List<types.Message> _buildMessages(List<MessageModel> history) {
     List<types.Message> messages = [];
 
     for(var chat in history) {

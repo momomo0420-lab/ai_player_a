@@ -1,5 +1,5 @@
 import 'package:ai_player_a/app_container.dart';
-import 'package:ai_player_a/data/model/chat_model.dart';
+import 'package:ai_player_a/data/model/message_model.dart';
 import 'package:ai_player_a/ui/screens/ai_chat/ai_chat_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +14,7 @@ class AiChatViewModel extends _$AiChatViewModel {
 
   Future<AiChatState> _updateState({
     bool? isConnecting,
-    List<ChatModel>? history,
+    List<MessageModel>? history,
   }) async {
     state = await AsyncValue.guard(() async {
       final currentState = await future;
@@ -36,7 +36,7 @@ class AiChatViewModel extends _$AiChatViewModel {
       message: message,
     );
 
-    final chat = ChatModel(author: Authors.user, message: message);
+    final chat = MessageModel(author: Authors.user, message: message);
     final history = [...currentState.history];
     history.add(chat);
     _updateState(history: history);
@@ -60,7 +60,7 @@ class AiChatViewModel extends _$AiChatViewModel {
       message = removedChat.message;
     }
 
-    final newAiChat = ChatModel(
+    final newAiChat = MessageModel(
       author: Authors.ai,
       message: message + chunk,
     );

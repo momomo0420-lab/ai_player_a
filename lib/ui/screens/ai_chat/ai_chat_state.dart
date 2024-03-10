@@ -1,4 +1,4 @@
-import 'package:ai_player_a/data/model/chat_model.dart';
+import 'package:ai_player_a/data/model/message_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'ai_chat_state.freezed.dart';
@@ -9,6 +9,6 @@ class AiChatState with _$AiChatState {
     @Default(false)
     bool isConnecting,
     @Default([])
-    List<ChatModel> history,
+    List<MessageModel> history,
   }) = _AiChatState;
 }

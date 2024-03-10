@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'chat_model.freezed.dart';
+part 'message_model.freezed.dart';
 
 enum Authors {
   ai,
@@ -8,10 +8,10 @@ enum Authors {
 }
 
 @freezed
-class ChatModel with _$ChatModel {
-  const factory ChatModel ({
+class MessageModel with _$MessageModel {
+  const factory MessageModel ({
     required Authors author,
     @Default('')
     String message,
-  }) = _ChatModel;
+  }) = _MessageModel;
 }

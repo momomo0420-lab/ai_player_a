@@ -1,5 +1,5 @@
 import 'package:ai_player_a/app_container.dart';
-import 'package:ai_player_a/data/model/chat_model.dart';
+import 'package:ai_player_a/data/model/message_model.dart';
 import 'package:ai_player_a/ui/screens/ai_consultant/ai_consultant_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,13 +13,13 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
     final message = await repository.initConsultation();
 
     return AiConsultantState(
-      history: [ChatModel(author: Authors.ai, message: message)],
+      history: [MessageModel(author: Authors.ai, message: message)],
     );
   }
 
   Future<AiConsultantState> _updateState({
     bool? isConnecting,
-    List<ChatModel>? history,
+    List<MessageModel>? history,
   }) async {
     state = await AsyncValue.guard(() async {
       final currentState = await future;
@@ -41,7 +41,7 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
       message: message,
     );
 
-    final chat = ChatModel(author: Authors.user, message: message);
+    final chat = MessageModel(author: Authors.user, message: message);
     final history = [...currentState.history];
     history.add(chat);
     _updateState(history: history);
@@ -65,7 +65,7 @@ class AiConsultantViewModel extends _$AiConsultantViewModel {
       message = removedChat.message;
     }
 
-    final newAiChat = ChatModel(
+    final newAiChat = MessageModel(
       author: Authors.ai,
       message: message + chunk,
     );
